@@ -9,7 +9,7 @@ $ pip install .
 ```
 
 Usage:
-```
+```python
 X, Y = ... # load your data
 
 model = ... # define your model
