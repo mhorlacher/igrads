@@ -26,3 +26,8 @@ attribution = integrated_gradients(X[0], model)
 
 
 **See the [Example.ipynb](https://github.com/mhorlacher/igrads/blob/main/example/Example.ipynb) for an end-to-end example.**
+
+
+Notes / Caution:
+- Package was test with Tensorflow version 2.4.1 but should work with other versions of the 2.x major release
+- Package currently only supports single-input models
