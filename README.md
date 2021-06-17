@@ -4,6 +4,22 @@ This is a Tensorflow 2.x implementation of the "Explainable AI" method *Integrat
 Installation:
 ```
 $ git clone https://github.com/mhorlacher/igrads.git
-$ cd igrad
+$ cd igrads
 $ pip install .
+```
+
+Usage:
+```
+X, Y = ... # load your data
+
+model = ... # define your model
+
+model.fit(...) # train your model
+
+# compute input attributions
+from igrads import integrated_gradients
+
+attribution = integrated_gradients(X[0], model)
+
+# 'attribution' has the same shape as the input. 
 ```
