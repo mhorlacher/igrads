@@ -1,1 +1,1 @@
-This is an Tensorflow 2.x implementation of the "Explainable AI" method *Integrated Gradients*. 
+This is a Tensorflow 2.x implementation of the "Explainable AI" method *Integrated Gradients* of the publication [Axiomatic Attribution for Deep Networks](https://arxiv.org/abs/1703.01365). 
