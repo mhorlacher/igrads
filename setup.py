@@ -16,7 +16,4 @@ setup(name='igrads',
       license='MIT',
       install_requires=requirements,
       packages=find_packages(),
-      entry_points = {
-            'console_scripts': ['deeple-train=deeple.__main__:train.main'],
-      },
       zip_safe=False)
