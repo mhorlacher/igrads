@@ -23,3 +23,6 @@ attribution = integrated_gradients(X[0], model)
 
 # 'attribution' has the same shape as the input. 
 ```
+
+
+**See the [Example.ipynb](https://github.com/mhorlacher/igrads/blob/main/example/Example.ipynb) for an end-to-end example.**
