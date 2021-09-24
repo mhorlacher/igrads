@@ -28,7 +28,7 @@ def _integral_approximation(gradients):
     return integrated_gradients
 
 # %%
-@tf.function
+#@tf.function
 def integrated_gradients(inputs, model, target_mask=None, baseline=None, steps=50):
   # define zero baseline if no other baseline is specified
   if baseline is None:
