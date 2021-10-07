@@ -2,7 +2,7 @@
 import tensorflow as tf
 
 # %%
-#@tf.function
+@tf.function
 def _interpolate_inputs(inputs, baseline, steps=50):
     alphas = tf.linspace(start=0.0, stop=1.0, num=steps+1)
     delta = inputs - baseline
@@ -10,17 +10,20 @@ def _interpolate_inputs(inputs, baseline, steps=50):
     return interploated_inputs
 
 # %%
-#@tf.function
+@tf.function
 def _compute_gradients(inputs, model, target_mask=None):
     with tf.GradientTape() as tape:
         tape.watch(inputs)
         pred = model(inputs)
         if target_mask is not None:
+            # apply mask, e.g. one-hot for classification
             pred = tf.math.multiply(pred, target_mask)
+            # reduce_sum for each batch
+            pred = tf.reduce_sum(pred, axis=tf.range(1, tf.rank(pred)))
     return tape.gradient(pred, inputs)
 
 # %%
-#@tf.function
+@tf.function
 def _integral_approximation(gradients):
     # trapezoidal
     grads = (gradients[:-1] + gradients[1:]) / tf.constant(2.0)
@@ -28,7 +31,7 @@ def _integral_approximation(gradients):
     return integrated_gradients
 
 # %%
-#@tf.function
+@tf.function
 def integrated_gradients(inputs, model, target_mask=None, baseline=None, steps=50):
   # define zero baseline if no other baseline is specified
   if baseline is None:

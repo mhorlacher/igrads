@@ -15,5 +15,6 @@ setup(name='igrads',
       author_email='marc.horlacher@helmholtz-muenchen.de',
       license='MIT',
       install_requires=requirements,
+      include_package_data=True,
       packages=find_packages(),
       zip_safe=False)
