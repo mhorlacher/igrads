@@ -3,8 +3,8 @@ import pandas as pd
 import logomaker
 
 # %%
-def plot_sequence_attribution(attribution_matrix):
-    attribution_df = pd.DataFrame(attribution_matrix, columns=['A', 'C', 'G', 'T'])
+def plot_sequence_attribution(attribution_matrix, sigma=['A', 'C', 'G', 'T'], width=20, height=4):
+    attribution_df = pd.DataFrame(attribution_matrix, columns=sigma)
 
     # create Logo object
     attribution_logo = logomaker.Logo(attribution_df,
@@ -22,7 +22,7 @@ def plot_sequence_attribution(attribution_matrix):
     #attribution_logo.ax.xaxis.set_tick_params(which='both', bottom=False, top=False, labelbottom=False)
 
     # adjust figure width and heigh
-    logo.fig.set_figheight(3)
-    logo.fig.set_figwidth(20)
+    attribution_logo.fig.set_figheight(height)
+    attribution_logo.fig.set_figwidth(width)
 
     return attribution_logo
