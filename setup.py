@@ -8,9 +8,9 @@ requirements = [
 ]
 
 setup(name='igrads',
-      version='0.1',
+      version='0.2',
       description='Integrated Gradients for Tensorflow 2.x',
-      url='http://github.com/mhorlacher/deeple',
+      url='http://github.com/mhorlacher/igrads',
       author='Marc Horlacher',
       author_email='marc.horlacher@helmholtz-muenchen.de',
       license='MIT',
