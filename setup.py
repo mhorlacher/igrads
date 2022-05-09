@@ -8,7 +8,7 @@ requirements = [
 ]
 
 setup(name='igrads',
-      version='0.2',
+      version='0.3.0',
       description='Integrated Gradients for Tensorflow 2.x',
       url='http://github.com/mhorlacher/igrads',
       author='Marc Horlacher',
