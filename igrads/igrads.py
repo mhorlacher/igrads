@@ -3,12 +3,26 @@ import numpy as np
 import tensorflow as tf
 
 # %%
-@tf.function
-def _interpolate_inputs(inputs, baseline, steps=50):
+# @tf.function
+# def _interpolate_inputs(inputs, baseline, steps=50):
+#     alphas = tf.linspace(start=0.0, stop=1.0, num=steps+1)
+#     delta = inputs - baseline
+#     interploated_inputs = tf.vectorized_map(lambda x: baseline + delta * x, alphas)
+#     return interploated_inputs
+# %%
+# @tf.function
+def _interpolate(x, baseline, steps=50):
     alphas = tf.linspace(start=0.0, stop=1.0, num=steps+1)
-    delta = inputs - baseline
-    interploated_inputs = tf.vectorized_map(lambda x: baseline + delta * x, alphas)
-    return interploated_inputs
+    delta = x - baseline
+    return tf.vectorized_map(lambda a: baseline + delta * a, alphas)
+
+# %%
+# @tf.function
+def _nested_interpolate(x, baseline, steps=50):
+    x_flattened = tf.nest.flatten(x)
+    baseline_flattened = tf.nest.flatten(baseline)
+    interpolated_flattened = [_interpolate(x, baseline, steps) for x, baseline in zip(x_flattened, baseline_flattened)]
+    return tf.nest.pack_sequence_as(x, interpolated_flattened)
 
 # %%
 def _apply_fn(fn, inputs):
@@ -79,21 +93,21 @@ def _integral_approximation(gradients):
 
 # %%
 #@tf.function
-def integrated_gradients(inputs, model, target_mask=None, postproc_fn=None, baseline=None, steps=50):
-  # define zero baseline if no other baseline is specified
-  if baseline is None:
-    baseline = tf.zeros(tf.shape(inputs))
+def integrated_gradients(inputs, baseline, model, target_mask=None, postproc_fn=None, steps=50):
+    # TODO: define zero baseline if no other baseline is specified
+    # if baseline is None:
+    # baseline = tf.zeros(tf.shape(inputs))
 
-  # create interpolatioted inputs between inputs and baseline
-  interpolated_inputs = _interpolate_inputs(inputs, baseline, steps)
+    # create interpolatioted inputs between inputs and baseline
+    interpolated_inputs = _nested_interpolate(inputs, baseline, steps)
 
-  # compute gradients for interpolated inputs
-  grads = _compute_gradients(interpolated_inputs, model, target_mask, postproc_fn)
+    # compute gradients for interpolated inputs
+    grads = _compute_gradients(interpolated_inputs, model, target_mask, postproc_fn)
 
-  # approximate the gradients integral
-  integrated_grads = _integral_approximation(grads)
+    # approximate the gradients integral
+    integrated_grads = _integral_approximation(grads)
 
-  # scale integrated gradients with respect to input.
-  integrated_grads = _apply_fn(lambda x: (inputs - baseline) * x, integrated_grads)
+    # scale integrated gradients with respect to input.
+    integrated_grads = _apply_fn(lambda x: (inputs - baseline) * x, integrated_grads)
 
-  return integrated_grads
+    return integrated_grads
