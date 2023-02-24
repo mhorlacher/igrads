@@ -92,6 +92,15 @@ def _integral_approximation(gradients):
     return integrated_gradients
 
 # %%
+def apply_fn_elementwise_structures(fun, struct1, struct2):
+    tf.nest.assert_same_structure(struct1, struct2)
+
+    struct1_flat, struct2_flat = tf.nest.flatten(struct1), tf.nest.flatten(struct2)
+    results_flat = [fun(x, y) for x, y in zip(struct1_flat, struct2_flat)]
+
+    return tf.nest.pack_sequence_as(struct1, results_flat)
+
+# %%
 #@tf.function
 def integrated_gradients(inputs, baseline, model, target_mask=None, postproc_fn=None, steps=50):
     # TODO: define zero baseline if no other baseline is specified
@@ -108,6 +117,8 @@ def integrated_gradients(inputs, baseline, model, target_mask=None, postproc_fn=
     integrated_grads = _integral_approximation(grads)
 
     # scale integrated gradients with respect to input.
-    integrated_grads = _apply_fn(lambda x: (inputs - baseline) * x, integrated_grads)
+    # integrated_grads = _apply_fn(lambda x: (inputs - baseline) * x, integrated_grads)
+    inputs_baseline_delta = apply_fn_elementwise_structures(lambda x, y: x-y, inputs, baseline)
+    integrated_grads = apply_fn_elementwise_structures(lambda x, y: x*y, inputs_baseline_delta, integrated_grads)
 
     return integrated_grads
